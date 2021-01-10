@@ -34,3 +34,13 @@ function genRoom() {
 
     return room;
 }
+
+module.exports = {
+    minRoomWidth,
+    maxRoomWidth,
+    minRoomHeight,
+    maxRoomHeight,
+
+    randomInt,
+    genRoomBoundaries,
+}
