@@ -146,14 +146,14 @@
         if (bulletVelocityX === 0 && bulletVelocityY === 0) return;
 
         var bullet = this.bullets.create(this.player.x, this.player.y, 'bullet');
-        bullet.setBounce(1);
+        bullet.setBounce(0);
         bullet.setCollideWorldBounds(true);
         bullet.setVelocity(bulletVelocityX, bulletVelocityY);
 
         var self = this;
         setTimeout(function() {
             self.bullets.remove(bullet, true, true);
-        }, 1000);
+        }, 3000);
     }
 
     function handlePlayerMove()
