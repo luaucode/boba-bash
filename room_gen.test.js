@@ -7,13 +7,21 @@ test('randomInt', () => {
   expect(value >= 4 && value < 10).toBe(true);
 });
 
+test('shiftPolygon', () => {
+  var triangle = [{x: 10, y: 10}, {x: 5, y: 20}, {x: 15, y: 20}]
+  var r = rg.shiftPolygon(triangle, 10, 20);
+  expect(r[0]).toEqual({x: 20, y: 30});
+  expect(r[1]).toEqual({x: 15, y: 40});
+  expect(r[2]).toEqual({x: 25, y: 40});
+});
+
 test('genRoomBoundaries', () => {
-  var b = rg.genRoomBoundaries()
+  var b = rg.genRoomBoundaries();
   expect(b).toHaveLength(4);
 
-  var w = b[3].x
-  var h = b[3].y
-  
+  var w = b[3].x;
+  var h = b[3].y;
+
   expect(w >= rg.minRoomWidth && w <= rg.maxRoomWidth).toBe(true);
   expect(h >= rg.minRoomHeight && h <= rg.maxRoomHeight).toBe(true);
     
