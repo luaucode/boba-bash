@@ -1,7 +1,7 @@
-const minRoomWidth = 800;
-const maxRoomWidth = 1600;
-const minRoomHeight = 600;
-const maxRoomHeight = 900;
+const minRoomWidth = 50; //800
+const maxRoomWidth = 50; //1600
+const minRoomHeight = 23; //600
+const maxRoomHeight = 23; //900
 
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
@@ -36,9 +36,29 @@ function genObstacle(minWidth, minHeight, maxWidth, maxHeight) {
 }
 
 function genObstacles(number) {
+    var obstacles = [];
     for (var i = 0; i < number; i++) {
-        genObstacle();
+        obstacles.push(genObstacle());
     }
+    return obstacles;
+}
+
+function dumpRoom(room) {
+    var b = room.boundaries;
+    var lines = [];
+    for (var row = 0; row < b[3].y; row++) {
+        var line = '';
+        for (var col = 0; col < b[1].x; col++) {
+            if (row == 0 || row == b[3].y - 1 || col == 0 || col == b[1].x - 1) {
+                line += '#';
+            } else {
+                line += '·';
+            }
+        }
+        lines.push(line);
+    }
+    var txt = lines.join('\n');
+    console.log(txt);
 }
 
 function genRoom() {
@@ -61,4 +81,6 @@ module.exports = {
     randomInt,
     genRoomBoundaries,
     shiftPolygon,
+    dumpRoom,
+    genRoom,
 }

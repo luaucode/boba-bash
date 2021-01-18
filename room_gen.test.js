@@ -30,3 +30,8 @@ test('genRoomBoundaries', () => {
   expect(b[2]).toEqual({x:0, y:h});
   expect(b[3]).toEqual({x:w, y:h});
 });
+
+test('genRoom', () => {
+  var r = rg.genRoom();
+  rg.dumpRoom(r);
+});
