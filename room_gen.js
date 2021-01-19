@@ -1,26 +1,26 @@
-const minRoomWidth = 800;
-const maxRoomWidth = 1600;
-const minRoomHeight = 600;
-const maxRoomHeight = 900;
+const minRoomWidth = 50; //800
+const maxRoomWidth = 50; //1600
+const minRoomHeight = 20; //600
+const maxRoomHeight = 20; //900
 
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
 function genPoly4(minWidth, minHeight, maxWidth, maxHeight) {
-    var width = randomInt(minWidth, maxWidth);
-    var height = randomInt(minHeight, maxHeight);
+    let width = randomInt(minWidth, maxWidth);
+    let height = randomInt(minHeight, maxHeight);
 
-    var topLeft = {x: 0, y: 0};
-    var topRight = {x: width, y: 0};
-    var botLeft = {x: 0, y: height};
-    var botRight = {x: width, y: height};
+    let topLeft = {x: 0, y: 0};
+    let topRight = {x: width, y: 0};
+    let botLeft = {x: 0, y: height};
+    let botRight = {x: width, y: height};
 
     return [topLeft, topRight, botLeft, botRight];
 }
 
 function shiftPolygon(points, offsetX, offsetY) {
-    for (var i = 0; i < points.length; i++) {
+    for (let i = 0; i < points.length; i++) {
         points[i].x += offsetX;
         points[i].y += offsetY;
     }
@@ -32,8 +32,8 @@ function genRoomBoundaries() {
 }
 
 function genObstacles(number) {
-    var obstacles = [];
-    for (var i = 0; i < number; i++) {
+    let obstacles = [];
+    for (let i = 0; i < number; i++) {
         obstacles.push(genPoly4(30, 30, 100, 100));
     }
     return obstacles;
@@ -64,8 +64,8 @@ function pointInRect(rect, x, y) {
 }
 
 function isObstacle(obstacles, row, col) {    
-    for (var i = 0; i < obstacles.length; i++) {
-        if (pointInRect(obstacles[i], row, col)) {
+    for (let i = 0; i < obstacles.length; i++) {
+        if (pointInRect(obstacles[i], col, row)) {
             return true;
         }
     }
@@ -73,12 +73,12 @@ function isObstacle(obstacles, row, col) {
 }
 
 function dumpRoom(room) {
-    var b = room.boundaries;
-    var lines = [];
-    for (var row = 0; row < b[3].y; row++) {
-        var line = '';
-        for (var col = 0; col < b[1].x; col++) {
-            if (row == 0 || row == b[3].y - 1 || col == 0 || col == b[1].x - 1) {
+    let b = room.boundaries;
+    let lines = [];
+    for (let row = 0; row < b[3].y; row++) {
+        let line = '';
+        for (let col = 0; col < b[1].x; col++) {
+            if (row === 0 || row === b[3].y - 1 || col === 0 || col === b[1].x - 1) {
                 line += '#';
             } else if (isObstacle(room.obstacles, row, col)) {
                 line += '◌';
@@ -88,9 +88,10 @@ function dumpRoom(room) {
         }
         lines.push(line);
     }
-    var txt = lines.join('\n');
+    let txt = lines.join('\n');
     console.log(txt);
 }
+
 
 function genRoom(numObstacles) {
     let room = {obstacles: []};
@@ -100,8 +101,10 @@ function genRoom(numObstacles) {
     // generate obstacles
     let obstacles = genObstacles(numObstacles);
     room.obstacles = obstacles.map(function(obstacle) {
-        let offsetX = randomInt(1, room.boundaries[1].x - 1);
-        let offsetY = randomInt(1, room.boundaries[2].y - 1);
+        let w = obstacle[1].x;
+        let h = obstacle[2].y;
+        let offsetX = randomInt(1, room.boundaries[1].x - 1 - w);
+        let offsetY = randomInt(1, room.boundaries[2].y - 1 - h);
         return shiftPolygon(obstacle, offsetX, offsetY);
     });
     return room;
@@ -121,4 +124,5 @@ module.exports = {
     isObstacle,
     pointInRect,
     poly4ToRectangle,
+
 }
