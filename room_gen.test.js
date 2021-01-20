@@ -31,10 +31,10 @@ test('genRoomBoundaries', () => {
   expect(b[3]).toEqual({x:w, y:h});
 });
 
-// test('genRoom', () => {
-//   let r = rg.genRoom();
-//   rg.dumpRoom(r);
-// });
+test('genRoom', () => {
+  let r = rg.genRoom(7);
+  rg.dumpRoom(r);
+});
 
 
 test('pointInRect', () => {

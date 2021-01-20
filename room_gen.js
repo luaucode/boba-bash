@@ -34,7 +34,8 @@ function genRoomBoundaries() {
 function genObstacles(number) {
     let obstacles = [];
     for (let i = 0; i < number; i++) {
-        obstacles.push(genPoly4(30, 30, 100, 100));
+        //obstacles.push(genPoly4(30, 30, 100, 100));
+        obstacles.push(genPoly4(0, 0, 4, 4));
     }
     return obstacles;
 }
