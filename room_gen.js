@@ -1,7 +1,7 @@
-const minRoomWidth = 50; //800
-const maxRoomWidth = 50; //1600
-const minRoomHeight = 20; //600
-const maxRoomHeight = 20; //900
+var minRoomWidth = 50; //800
+var maxRoomWidth = 50; //1600
+var minRoomHeight = 20; //600
+var maxRoomHeight = 20; //900
 
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
@@ -27,9 +27,6 @@ function shiftPolygon(points, offsetX, offsetY) {
     return points;
 }
 
-function genRoomBoundaries() {
-    return genPoly4(minRoomWidth, minRoomHeight, maxRoomWidth, maxRoomHeight);
-}
 
 function genObstacles(number) {
     let obstacles = [];
@@ -94,11 +91,11 @@ function dumpRoom(room) {
 }
 
 
-function genRoom(numObstacles) {
+function genRoom(minWidth, maxWidth, minHeight, maxHeight, numObstacles) {
     let room = {obstacles: []};
 
     // generate room boundaries
-    room.boundaries = genRoomBoundaries();
+    room.boundaries = genPoly4(minWidth, maxWidth, minHeight, maxHeight);
     // generate obstacles
     let obstacles = genObstacles(numObstacles);
     room.obstacles = obstacles.map(function(obstacle) {
@@ -118,12 +115,10 @@ module.exports = {
     maxRoomHeight,
 
     randomInt,
-    genRoomBoundaries,
     shiftPolygon,
     dumpRoom,
     genRoom,
     isObstacle,
     pointInRect,
     poly4ToRectangle,
-
 }

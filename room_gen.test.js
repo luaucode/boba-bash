@@ -15,24 +15,8 @@ test('shiftPolygon', () => {
   expect(r[2]).toEqual({x: 25, y: 40});
 });
 
-test('genRoomBoundaries', () => {
-  let b = rg.genRoomBoundaries();
-  expect(b).toHaveLength(4);
-
-  let w = b[3].x;
-  let h = b[3].y;
-
-  expect(w >= rg.minRoomWidth && w <= rg.maxRoomWidth).toBe(true);
-  expect(h >= rg.minRoomHeight && h <= rg.maxRoomHeight).toBe(true);
-    
-  expect(b[0]).toEqual({x:0, y:0});
-  expect(b[1]).toEqual({x:w, y:0});
-  expect(b[2]).toEqual({x:0, y:h});
-  expect(b[3]).toEqual({x:w, y:h});
-});
-
 test('genRoom', () => {
-  let r = rg.genRoom(7);
+  let r = rg.genRoom(20, 50, 20, 50, 7);
   rg.dumpRoom(r);
 });
 
@@ -63,13 +47,14 @@ test('isObstacle', () => {
   expect(o).toBe(true);
 });
 
-// test('getPosSize', () => {
-//   let points = [{x: 10, y: 10}, {x: 20, y: 10}, {x: 10, y: 20}, {x: 20, y: 20}];
-//   let pointsTwo = [{x: 40, y: 40}, {x: 60, y: 40}, {x: 40, y: 60}, {x: 60, y: 60}];
-//   let g = rg.getPosSize(points);
-//   console.log(g);
-//   expect(g).toEqual({x: 10, y: 10, width: 10, height: 10});
-//   g = rg.getPosSize(pointsTwo);
-//   expect(g).not.toEqual({x: 10, y: 10, width: 10, height: 10});
-//   expect(g).toEqual({x: 40, y: 40, width: 20, height: 20});
-// });
+test('poly4ToRectangle', () => {
+  let points = [{x: 10, y: 10}, {x: 20, y: 10}, {x: 10, y: 20}, {x: 20, y: 20}];
+  let g = rg.poly4ToRectangle(points);
+  console.log(g);
+  expect(g).toEqual({x: 10, y: 10, width: 10, height: 10});
+
+  let pointsTwo = [{x: 40, y: 40}, {x: 60, y: 40}, {x: 40, y: 60}, {x: 60, y: 60}];
+  g = rg.poly4ToRectangle(pointsTwo);
+  expect(g).not.toEqual({x: 10, y: 10, width: 10, height: 10});
+  expect(g).toEqual({x: 40, y: 40, width: 20, height: 20});
+});
