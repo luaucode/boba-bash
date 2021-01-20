@@ -1,13 +1,13 @@
-const minRoomWidth = 25; //800
-const maxRoomWidth = 25; //1600
-const minRoomHeight = 25; //600
-const maxRoomHeight = 25; //900
+const minRoomWidth = 800;
+const maxRoomWidth = 1600;
+const minRoomHeight = 600;
+const maxRoomHeight = 900;
 
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-function genRectangle(minWidth, minHeight, maxWidth, maxHeight) {
+function genPoly4(minWidth, minHeight, maxWidth, maxHeight) {
     var width = randomInt(minWidth, maxWidth);
     var height = randomInt(minHeight, maxHeight);
 
@@ -24,20 +24,27 @@ function shiftPolygon(points, offsetX, offsetY) {
         points[i].x += offsetX;
         points[i].y += offsetY;
     }
-    console.log(points);
     return points;
 }
 
 function genRoomBoundaries() {
-    return genRectangle(minRoomWidth, minRoomHeight, maxRoomWidth, maxRoomHeight);
+    return genPoly4(minRoomWidth, minRoomHeight, maxRoomWidth, maxRoomHeight);
 }
 
 function genObstacles(number) {
     var obstacles = [];
     for (var i = 0; i < number; i++) {
-        obstacles.push(genRectangle(2, 2, 4, 4));
+        obstacles.push(genPoly4(30, 30, 100, 100));
     }
     return obstacles;
+}
+
+function poly4ToRectangle(points) {
+    var x = points[0].x;
+    var y = points[0].y;
+    var width = points[1].x - points[0].x;
+    var height = points[2].y - points[0].y;
+    return {x: x, y: y, width: width, height: height};
 }
 
 function pointInRect(rect, x, y) {
@@ -71,10 +78,6 @@ function dumpRoom(room) {
     for (var row = 0; row < b[3].y; row++) {
         var line = '';
         for (var col = 0; col < b[1].x; col++) {
-            if (col == 2 && row == 3) {
-                console.log(room.obstacles);
-                console.log('isObstacle returned ' + isObstacle(room.obstacles, row, col));
-            }
             if (row == 0 || row == b[3].y - 1 || col == 0 || col == b[1].x - 1) {
                 line += '#';
             } else if (isObstacle(room.obstacles, row, col)) {
@@ -89,20 +92,18 @@ function dumpRoom(room) {
     console.log(txt);
 }
 
-function genRoom() {
-    var room = {obstacles: []};
+function genRoom(numObstacles) {
+    let room = {obstacles: []};
 
     // generate room boundaries
     room.boundaries = genRoomBoundaries();
     // generate obstacles
-    var obstacles = genObstacles(1);
-    for (var i = 0; i < obstacles.length; i++) {
-        var offsetX = randomInt(1, room.boundaries[1].x - 1);
-        var offsetY = randomInt(1, room.boundaries[2].y - 1);
-        var shiftedPoints = shiftPolygon(obstacles[i], offsetX, offsetY);
-        console.log(shiftedPoints);
-        room.obstacles.push(shiftedPoints);
-    }
+    let obstacles = genObstacles(numObstacles);
+    room.obstacles = obstacles.map(function(obstacle) {
+        let offsetX = randomInt(1, room.boundaries[1].x - 1);
+        let offsetY = randomInt(1, room.boundaries[2].y - 1);
+        return shiftPolygon(obstacle, offsetX, offsetY);
+    });
     return room;
 }
 
@@ -119,4 +120,5 @@ module.exports = {
     genRoom,
     isObstacle,
     pointInRect,
+    poly4ToRectangle,
 }
