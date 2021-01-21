@@ -7,7 +7,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 0 },
+            gravity: {y: 0},
             debug: false
         }
     },
@@ -47,6 +47,7 @@ function preload () {
 }
 
 function create () {
+    console.log('start');
     this.add.image(400, 300, 'sky');
 
     this.player = this.physics.add.sprite(100, 450, 'dude');
@@ -54,8 +55,7 @@ function create () {
     this.player.setCollideWorldBounds(true);
 
     var cb = createObstacles.bind(this);
-    console.log(this);
-    cb();
+    this.obstacles = cb();
 
     this.anims.create({
         key: 'left',
@@ -77,45 +77,11 @@ function create () {
         repeat: -1
     });
 
-    this.physics.add.collider(this.player, this.platforms);
-
-    stars = this.physics.add.group({
-        key: 'star',
-        repeat: 11,
-        setXY: { x: 12, y: 0, stepX: 70 }
-    });
-
-    stars.children.iterate(function (child) {
-
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    });
-
-    this.physics.add.collider(stars, this.platforms);
-    this.physics.add.overlap(this.player, stars, collectStar, null, this);
-
-    function collectStar (player, star) {
-        star.disableBody(true, true);
-
-        score += 10;
-        scoreText.setText('Score: ' + score);
-
-        if (stars.countActive(true) === 0) {
-            stars.children.iterate(function (child) {
-
-                child.enableBody(true, child.x, 0, true, true);
-
-            });
-
-            var x = (this.player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-        }
-    }
-
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    this.physics.add.collider(this.player, this.obstacles);
 
     this.bullets = this.physics.add.group();
 
-    this.physics.add.collider(this.bullets, this.platforms);
+    this.physics.add.collider(this.bullets, this.obstacles);
 
     setInterval(this.fireBullet.bind(this), attackSpeed);
 }
@@ -197,13 +163,19 @@ function handlePlayerAttack() {
 }
 
 function createObstacles() {
-    var phaser = this;
-    let room = rg.genRoom(rg.randomInt(2, 6));
+    const minWidth = 800;
+    const maxWidth = 800;
+    const minHeight = 600;
+    const maxHeight = 600;
+    this.obstacles = this.physics.add.group();
+    let phaser = this;
+    let room = rg.genRoom(minWidth, maxWidth, minHeight, maxHeight, rg.randomInt(2, 6));
     room.obstacles.forEach(function(obstacle) {
+        console.log(obstacle);
         let rect = rg.poly4ToRectangle(obstacle);
+        let obs = phaser.obstacles.create(rect.x, rect.y, 'obstacle');
         let phaserRect = phaser.add.rectangle(rect.x, rect.y, rect.width, rect.height, 0x6666ff);
         phaser.physics.add.existing(phaserRect);
-        phaser.physics.add.collider(phaser.player, phaserRect);
     })
 
     // this.platforms = this.physics.add.staticGroup();
